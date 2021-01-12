@@ -43,3 +43,22 @@ typescript가 어떻게 javascript로 변환할지 옵션
 "start": "node index.js"
 }
 ```
+
+### 2. First steps with Typescript
+
+파라미터에 `?`를 붙이면 파라미터를 옵션으로 사용할 수 있다.
+
+```js
+const name = "Nicolas",
+  age = 24,
+  gender = "male";
+
+const sayHi = (name, age, gender?) => {
+  console.log(`Hello ${name}, you are ${age}, your gender is ${gender}`);
+};
+
+// const sayHi: (name: any, age: any, gender?: any) => void;
+sayHi(name, age);
+
+export {};
+```
