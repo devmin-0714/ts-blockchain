@@ -1,0 +1,12 @@
+{
+  "name": "ts-blockchain",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/devpark0714/ts-blockchain.git",
+  "author": "devpark0714 <devpark0714@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "prestart": "tsc",
+    "start": "node index.js"
+  }
+}
