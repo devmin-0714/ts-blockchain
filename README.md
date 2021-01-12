@@ -178,3 +178,39 @@ class Human {
     }
 }
 ```
+
+## 6. Blockchain Creating a Block
+
+### 블록 구조 만들기
+
+```js
+class Block {
+    public index: number;
+    public hash: string;
+    public previousHash: string;
+    public data: string;
+    public timestamp: number;
+    constructor(
+        index: number,
+        hash: string,
+        previousHash: string,
+        data: string,
+        timestamp: number
+    ) {
+        this.index = index;
+        this.hash = hash;
+        this.previousHash = previousHash;
+        this.data = data;
+        this.timestamp = timestamp;
+        }
+}
+
+const genesisBlock: Block = new Block(0, '7412667', '', 'Hello', 123456);
+
+// `blockchain`은 오직 `Block`에 관련된 것만 추가된다.
+const blockchainn: [Block] = [genesisBlock];
+
+console.log(blockchainn);
+
+export {};
+```
