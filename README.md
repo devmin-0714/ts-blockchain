@@ -109,7 +109,7 @@ export {};
 
 ### object를 인자로 넘길때 interfact를 이용
 
-자바스크립트에서는 작동하지 않는다.
+인터페이스는 자바스크립트로 컴파일 되지 않는다.
 
 ```js
 interface Human {
@@ -133,4 +133,48 @@ const sayHi = (person: Human): string => {
 console.log(sayHi(person));
 
 export {};
+```
+
+## 5. Classes on Typescript
+
+인터페이스는 자바스크립트로 컴파일되지 않지만, 클래스는 가능하다.
+자바스크립트를 인터페이스로 사용하면 타입스크립트 측면에서 좀더 안전하다.
+그러나, react, express 등을 사용할 때는 코드에서 클래스를 사용해야한다.
+
+### public, private
+
+private은 클래스 내부에서만 접근 가능
+
+```js
+class Human {
+    public name: string;
+    public age: number; // ex) private age: number
+    public gender: string;
+    constructor(name: string, age: number, gender: string) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+}
+
+const lynn = new Human("Lynn", 18, "Female");
+
+const sayHi = (person: Human): string => {
+    return`Hello ${person.name},
+    you are ${person.age}, // ex) error 발생
+    your gender is ${person.gender}!`;
+};
+
+console.log(sayHi(lynn));
+
+export {};
+
+// index.js
+class Human {
+    constructor(name, age, gender) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+}
 ```
