@@ -1,20 +1,26 @@
 # ts-blockchain
 
 [강의 링크](https://www.youtube.com/watch?v=7wAhwv2Rbxw&list=PLAIAppF7linDYmY78NgUIlE9Qv-j4z0wU&index=1)
+[소스 코드](https://github.com/devpark0714/ts-blockchain)
 
-## 간단한 블록체인을 만들어 보며 타입스크립트를 배워보는 강의
+### 간단한 블록체인을 만들어 보며 타입스크립트를 배워보는 강의
 
-자바스크립트로 컴파일
-언어가 예측가능하고 읽기 쉬운 코드로 자바스크립트를 사용가능
+자바스크립트로 컴파일이 가능하며 언어가 예측가능하고 읽기 쉬운 코드로 자바스크립트를 사용가능
+
+### 블록체인
+
+각 블록에는 해시값을 가지고 있으며 각 블록이 체이닝을 이루고 있다.
+
+***
 
 ## 1. Setting TypeScript Up
 
-$ yarn init -y
-$ yarn global add typescript
+`$ yarn init -y`
+`$ yarn global add typescript`
 
 ### tsconfig.json
 
-typescript가 어떻게 javascript로 변환할지 옵션
+typescript가 어떻게 javascript로 변환할지 옵션을 설정
 
 ```js
 // tsconfig.json
@@ -42,9 +48,11 @@ typescript가 어떻게 javascript로 변환할지 옵션
 }
 ```
 
+***
+
 ## 2. First steps with Typescript
 
-### 파라미터에 `?`를 붙이면 파라미터를 옵션으로 사용할 수 있다.
+파라미터에 `?`를 붙이면 파라미터를 옵션으로 사용할 수 있다.
 
 ```js
 const name = "Nicolas",
@@ -61,6 +69,8 @@ sayHi(name, age);
 export {};
 ```
 
+***
+
 ## 3. Types in Typescript
 
 ```js
@@ -74,9 +84,9 @@ console.log(sayHi("Nicolas", 24, "male"));
 export {};
 ```
 
-### TSC watch
+### 1) TSC watch
 
-매버 tsc 명령어를 통해 ts파일을 js파일로 컴파일 하는 것을 자동으로 해준다.
+매번 tsc 명령어를 통해 ts파일을 js파일로 컴파일 하던 것을 자동으로 해준다.
 `$ yarn add tsc-watch --dev`
 
 ```js
@@ -87,7 +97,7 @@ export {};
     }
 ```
 
-### dist
+### 2) dist
 
 모든 컴파일된 것들은 dist 폴더로 들어간다.
 
@@ -101,13 +111,15 @@ export {};
 }
 ```
 
-### 오류
+### 3) 오류
 
-"Cannot find module 'typescript/bin/tsc" 오류발생하여 npm install typescript --save-dev 로 해결
+타입스크립트를 작성하기 위해 필요
+오류 : `"Cannot find module 'typescript/bin/tsc"`
+해결 : `$ npm install typescript --save-dev`
 
 ## 4. Interfaces on Typescript
 
-### object를 인자로 넘길때 interfact를 이용
+### 겍체를 인자로 넘길때 interfact를 이용
 
 인터페이스는 자바스크립트로 컴파일 되지 않는다.
 
@@ -134,6 +146,8 @@ console.log(sayHi(person));
 
 export {};
 ```
+
+***
 
 ## 5. Classes on Typescript
 
@@ -179,6 +193,8 @@ class Human {
 }
 ```
 
+***
+
 ## 6. Blockchain Creating a Block
 
 ### 블록 구조 만들기
@@ -215,11 +231,13 @@ console.log(blockchain);
 export {};
 ```
 
+***
+
 ## 7. Creating a Block
 
 ### 새 블록 만들기
 
-해쉬 계산이 필요
+해쉬값을 암호화하는 라이브러리
 `$ yarn add crypto-js`
 
 ```js
@@ -227,7 +245,8 @@ import * as CryptoJS from "crypto-js";
 
 class Block {
   // 클래스가 생성되지 않아도 호출할 수 있는 method
-  static calculateBlockHas = (
+  // index.js에서 클래스의 바깥에 나타난다.
+  static calculateBlockHash = (
     index: number,
     previousHash: string,
     timestamp: number,
@@ -247,6 +266,117 @@ const getBlockchain = (): Block[] => blockchain;
 const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
 
 const getNewTimeStamp = (): number => Math.round(new Date().getTime() / 1000);
+
+export {};
+```
+
+***
+
+## 8. Validating Block Structure
+
+```js
+import * as CryptoJS from "crypto-js";
+
+class Block {
+  // 타입 체크
+  static validateStructure = (aBlock: Block): boolean =>
+    typeof aBlock.index === "number" &&
+    typeof aBlock.hash === "string" &&
+    typeof aBlock.previousHash === "string" &&
+    typeof aBlock.timestamp === "number" &&
+    typeof aBlock.data === "string";
+}
+
+const createNewBlock = (data: string): Block => {
+  const previousBlock: Block = getLatestBlock();
+  const newIndex: number = previousBlock.index + 1;
+  const newTimestamp: number = getNewTimeStamp();
+  const newHash: string = Block.calculateBlockHash(
+    newIndex,
+    previousBlock.hash,
+    newTimestamp,
+    data
+  );
+  const newBlock: Block = new Block(
+    newIndex,
+    newHash,
+    previousBlock.hash,
+    data,
+    newTimestamp
+  );
+  // 새로운 블록을 만들때 블록체인에 추가
+  addBlock(newBlock);
+  return newBlock;
+};
+
+// 블록의 해쉬 얻기
+const getHashforBlock = (aBlock: Block): string =>
+  Block.calculateBlockHash(
+    aBlock.index,
+    aBlock.previousHash,
+    aBlock.timestamp,
+    aBlock.data
+  );
+
+// 블록체인의 기반은 블록들이 자신의 전 블록으로 링크가 되있기 때문에
+// cadidate 블럭과 previous 블럭을 비교가 필요
+const isBlockValid = (candidateBlock: Block, previousBlock: Block): boolean => {
+  if (!Block.validateStructure(candidateBlock)) {
+    return false;
+  } else if (previousBlock.index + 1 !== candidateBlock.index) {
+    return false;
+  } else if (previousBlock.hash !== candidateBlock.previousHash) {
+    return false;
+  } else if (getHashforBlock(candidateBlock) !== candidateBlock.hash) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+// 블록체인에 블록을 추가
+const addBlock = (candidateBlock: Block): void => {
+  if (isBlockValid(candidateBlock, getLatestBlock())) {
+    blockchain.push(candidateBlock);
+  }
+};
+
+createNewBlock("second block");
+createNewBlock("third block");
+createNewBlock("fourth block");
+
+console.log(blockchain);
+/* [
+  Block {
+    index: 0,
+    hash: '7412667',
+    previousHash: '',
+    data: 'Hello',
+    timestamp: 123456
+  },
+  Block {
+    index: 1,
+    hash: '685619eeffd544173c3aba38c72cedb09236da037bf6745bf17a66bd02934a15',
+    previousHash: '7412667',
+    data: 'second block',
+    timestamp: 1610462771
+  },
+  Block {
+    index: 2,
+    hash: 'ffb63d0c98b6cd2688e3441e06fbe023332dd297134842059627c5cb7638f66f',
+    previousHash: '685619eeffd544173c3aba38c72cedb09236da037bf6745bf17a66bd02934a15',
+    data: 'third block',
+    timestamp: 1610462771
+  },
+  Block {
+    index: 3,
+    hash: '7d958c9f4dbec239a28559ccd2f80606d054d580f38d2b75d87f5a904d1208a5',
+    previousHash: 'ffb63d0c98b6cd2688e3441e06fbe023332dd297134842059627c5cb7638f66f',
+    data: 'fourth block',
+    timestamp: 1610462771
+  }
+]
+*/
 
 export {};
 ```
