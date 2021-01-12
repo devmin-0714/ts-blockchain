@@ -104,3 +104,33 @@ export {};
 ### 오류
 
 "Cannot find module 'typescript/bin/tsc" 오류발생하여 npm install typescript --save-dev 로 해결
+
+## 4. Interfaces on Typescript
+
+### object를 인자로 넘길때 interfact를 이용
+
+자바스크립트에서는 작동하지 않는다.
+
+```js
+interface Human {
+  name: string;
+  age: number;
+  gender: string;
+}
+
+const person = {
+  name: "nicolas",
+  age: 22,
+  gender: "male",
+};
+
+const sayHi = (person: Human): string => {
+  return `Hello ${person.name},
+    you are ${person.age},
+    your gender is ${person.gender}!`;
+};
+
+console.log(sayHi(person));
+
+export {};
+```
