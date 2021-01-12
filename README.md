@@ -18,7 +18,6 @@ typescript가 어떻게 javascript로 변환할지 옵션
 
 ```js
 // tsconfig.json
-
 {
     "compilerOptions": {
         "module": "CommonJS",
@@ -37,16 +36,15 @@ typescript가 어떻게 javascript로 변환할지 옵션
 
 ```js
 // package.json
-
 "scripts": {
 "prestart": "tsc",
 "start": "node index.js"
 }
 ```
 
-### 2. First steps with Typescript
+## 2. First steps with Typescript
 
-파라미터에 `?`를 붙이면 파라미터를 옵션으로 사용할 수 있다.
+### 파라미터에 `?`를 붙이면 파라미터를 옵션으로 사용할 수 있다.
 
 ```js
 const name = "Nicolas",
@@ -62,3 +60,47 @@ sayHi(name, age);
 
 export {};
 ```
+
+## 3. Types in Typescript
+
+```js
+const sayHi = (name: string, age: number, gender: string): string => {
+  return `Hello ${name}, you are ${age}, your gender is ${gender}`;
+};
+
+// const sayHi: (name: string, age: number, gender: string) => string
+console.log(sayHi("Nicolas", 24, "male"));
+
+export {};
+```
+
+### TSC watch
+
+매버 tsc 명령어를 통해 ts파일을 js파일로 컴파일 하는 것을 자동으로 해준다.
+`$ yarn add tsc-watch --dev`
+
+```js
+// package.json
+
+"scripts": {
+    "start": "tsc-watch --onSuccess \" node dist/index.js\" "
+    }
+```
+
+### dist
+
+모든 컴파일된 것들은 dist 폴더로 들어간다.
+
+```js
+// tsconfig.json
+{
+    "compilerOptions": {
+        "outDir": "dist"
+    },
+    "include": ["src/**/*"],
+}
+```
+
+### 오류
+
+"Cannot find module 'typescript/bin/tsc" 오류발생하여 npm install typescript --save-dev 로 해결
