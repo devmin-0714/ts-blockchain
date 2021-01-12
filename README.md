@@ -208,9 +208,45 @@ class Block {
 const genesisBlock: Block = new Block(0, '7412667', '', 'Hello', 123456);
 
 // `blockchain`은 오직 `Block`에 관련된 것만 추가된다.
-const blockchainn: [Block] = [genesisBlock];
+const blockchainn: Block[] = [genesisBlock];
 
-console.log(blockchainn);
+console.log(blockchain);
+
+export {};
+```
+
+## 7. Creating a Block
+
+### 새 블록 만들기
+
+해쉬 계산이 필요
+`$ yarn add crypto-js`
+
+```js
+import * as CryptoJS from "crypto-js";
+
+class Block {
+  // 클래스가 생성되지 않아도 호출할 수 있는 method
+  static calculateBlockHas = (
+    index: number,
+    previousHash: string,
+    timestamp: number,
+    data: string
+  ): string =>
+    CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+}
+
+const genesisBlock: Block = new Block(0, "7412667", "", "Hello", 123456);
+
+const blockchain: Block[] = [genesisBlock];
+
+// 블록체인의 길이를 알기 위해
+const getBlockchain = (): Block[] => blockchain;
+
+// 가장 최근의 블록
+const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
+
+const getNewTimeStamp = (): number => Math.round(new Date().getTime() / 1000);
 
 export {};
 ```
